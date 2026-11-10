@@ -1,0 +1,10 @@
+agent_name = "sarvam-pipecat-demo"
+secret_set = "sarvam-pipecat-demo-secrets"
+agent_profile = "agent-1x"
+region = "us-west"
+
+[krisp_viva]
+	audio_filter = "tel"
+
+[scaling]
+	min_agents = 1

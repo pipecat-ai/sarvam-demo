@@ -1,0 +1,21 @@
+[project]
+name = "sarvam-pipecat-demo"
+version = "0.1.0"
+description = "Pipecat voice agent powered by Sarvam AI STT, LLM, and TTS"
+requires-python = ">=3.11"
+dependencies = [
+    "pipecat-ai[daily,runner,sarvam,silero,webrtc]>=1.15.0,<2",
+    "pipecatcloud>=1.5.0",
+]
+
+[dependency-groups]
+dev = [
+    "pipecat-ai[evals]>=1.15.0,<2",
+    "pyright>=1.1.404,<2",
+    "ruff>=0.12.11,<1",
+]
+
+[tool.ruff]
+line-length = 100
+[tool.ruff.lint]
+select = ["I", "UP"]

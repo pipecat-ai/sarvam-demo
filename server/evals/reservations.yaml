@@ -1,0 +1,51 @@
+name: reservations
+
+# Text-mode scenarios for the reservation tools. The checks are deterministic (tool names and
+# arguments), so no judge LLM is needed. Two terminals, both in server/:
+#
+#   uv run bot.py
+#   uv run pipecat eval run evals/reservations.yaml -v
+
+scenarios:
+  - name: lookup_by_confirmation_number
+    turns:
+      - expect:
+          - event: response # the greeting
+      - user: "Hi, can you check my booking? The confirmation number is 101."
+        expect:
+          - event: function_call
+            within_ms: 15000
+            calls:
+              - name: get_reservation
+                args: { confirmation_number: "101" }
+          - event: response
+            text_matches: "(?i)priya|प्रिया|seven|7|सात"
+
+  - name: book_after_confirming
+    turns:
+      - expect:
+          - event: response
+      - user: "I'd like to book a table for 4 people tomorrow at 8 pm, under the name Rahul Mehta. No special requests."
+        expect:
+          - event: response # reads the details back and asks to confirm
+            within_ms: 15000
+      - user: "Yes, that's all correct, please book it."
+        expect:
+          - event: function_call
+            within_ms: 15000
+            calls:
+              - name: create_reservation
+                args: { party_size: 4, time: "20:00" }
+          - event: response
+
+  - name: hang_up_on_goodbye
+    turns:
+      - expect:
+          - event: response
+      - user: "Actually I don't need anything today. Thanks, bye!"
+        expect:
+          - event: function_call
+            within_ms: 15000
+            calls:
+              - name: end_call
+          - event: response # the goodbye
